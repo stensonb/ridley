@@ -19,6 +19,31 @@ module Ridley
     attribute :cookbook_versions,
       default: Hashie::Mash.new
 
+    class << self
+
+      # EnvironmentObject 'factory' from a json file
+      def from_file(file)
+        from_json(File.read(file))
+      end
+
+      # EnvironmentObject 'factory' from a json string
+      def from_json(str)
+
+        # parse to hash
+        parsed = JSON.parse(str)
+
+        # build and fill return object
+        obj = self.new(???) # <-- how to I call this constructor?
+        obj.name = parsed["name"]
+        obj.description = parsed["description"]
+        obj.default_attributes = Hashie::Mash.new parsed["default_attributes"]
+        obj.override_attributes = Hashie::Mash.new parsed["override_attributes"]
+        obj.cookbook_versions = Hashie::Mash.new parsed["cookbook_versions"]
+
+        obj
+      end
+    end
+
     # Set an environment level default attribute given the dotted path representation of
     # the Chef attribute and value
     #
